@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: backend
+
+  profiles:
+    active: dev
+
+logging:
+  level:
+    root: INFO
+    com.example.fullstackapp: INFO
+
