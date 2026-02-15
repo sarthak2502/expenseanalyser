@@ -5,6 +5,14 @@ spring:
   profiles:
     active: dev
 
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+app:
+  upload-dir: /app/uploads
+
 logging:
   level:
     root: INFO

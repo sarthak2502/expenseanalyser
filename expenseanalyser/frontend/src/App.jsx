@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import ExpensesPage from './ExpensesPage.jsx';
+import UsersPage from './UsersPage.jsx';
+import AddExpenseFilesPage from './AddExpenseFilesPage.jsx';
 
 function App() {
   const [activeMenu, setActiveMenu] = useState('expenses');
@@ -31,6 +33,18 @@ function App() {
                 All Expenses
               </li>
               <li
+                className={activeMenu === 'users' ? 'active' : ''}
+                onClick={() => setActiveMenu('users')}
+              >
+                Users
+              </li>
+              <li
+                className={activeMenu === 'addExpenseFiles' ? 'active' : ''}
+                onClick={() => setActiveMenu('addExpenseFiles')}
+              >
+                Add Expense Files
+              </li>
+              <li
                 className={activeMenu === 'reports' ? 'active' : ''}
                 onClick={() => setActiveMenu('reports')}
               >
@@ -48,6 +62,8 @@ function App() {
 
         <main className="content">
           {activeMenu === 'expenses' && <ExpensesPage />}
+          {activeMenu === 'users' && <UsersPage />}
+          {activeMenu === 'addExpenseFiles' && <AddExpenseFilesPage />}
           {activeMenu === 'reports' && (
             <div className="placeholder">
               <h2>Reports</h2>
