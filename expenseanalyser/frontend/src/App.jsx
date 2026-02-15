@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import EmployeesPage from './EmployeesPage.jsx';
+import ExpensesPage from './ExpensesPage.jsx';
 
 function App() {
-  const [activeMenu, setActiveMenu] = useState('employees');
+  const [activeMenu, setActiveMenu] = useState('expenses');
 
   return (
     <div className="app-container">
       <header className="app-header">
-        <div className="logo">Fullstack Employee Dashboard</div>
+        <div className="logo">Expense Analyzer</div>
         <div className="header-actions">
           <button className="icon-button" aria-label="Notifications">
             🔔
@@ -25,10 +25,10 @@ function App() {
           <nav>
             <ul>
               <li
-                className={activeMenu === 'employees' ? 'active' : ''}
-                onClick={() => setActiveMenu('employees')}
+                className={activeMenu === 'expenses' ? 'active' : ''}
+                onClick={() => setActiveMenu('expenses')}
               >
-                All Employees
+                All Expenses
               </li>
               <li
                 className={activeMenu === 'reports' ? 'active' : ''}
@@ -47,7 +47,7 @@ function App() {
         </aside>
 
         <main className="content">
-          {activeMenu === 'employees' && <EmployeesPage />}
+          {activeMenu === 'expenses' && <ExpensesPage />}
           {activeMenu === 'reports' && (
             <div className="placeholder">
               <h2>Reports</h2>

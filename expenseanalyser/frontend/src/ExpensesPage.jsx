@@ -3,35 +3,35 @@ import apiClient from './apiClient.js';
 
 const initialFormState = {
   id: null,
-  firstName: '',
-  lastName: '',
-  email: '',
-  department: ''
+  title: '',
+  amount: '',
+  category: '',
+  expenseDate: ''
 };
 
-function EmployeesPage() {
-  const [employees, setEmployees] = useState([]);
+function ExpensesPage() {
+  const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchEmployees = async () => {
+  const fetchExpenses = async () => {
     try {
       setLoading(true);
       setError('');
-      const response = await apiClient.get('/employees');
-      setEmployees(response.data);
+      const response = await apiClient.get('/expenses');
+      setExpenses(response.data);
     } catch (e) {
-      setError('Failed to load employees');
+      setError('Failed to load expenses');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEmployees();
+    fetchExpenses();
   }, []);
 
   const openCreateModal = () => {
@@ -39,13 +39,13 @@ function EmployeesPage() {
     setIsModalOpen(true);
   };
 
-  const openEditModal = (employee) => {
+  const openEditModal = (expense) => {
     setFormData({
-      id: employee.id,
-      firstName: employee.firstName,
-      lastName: employee.lastName,
-      email: employee.email,
-      department: employee.department
+      id: expense.id,
+      title: expense.title,
+      amount: expense.amount,
+      category: expense.category,
+      expenseDate: expense.expenseDate || ''
     });
     setIsModalOpen(true);
   };
@@ -65,82 +65,88 @@ function EmployeesPage() {
     setIsSubmitting(true);
     try {
       const payload = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        department: formData.department
+        title: formData.title,
+        amount: Number(formData.amount),
+        category: formData.category,
+        expenseDate: formData.expenseDate
       };
 
       if (formData.id) {
-        await apiClient.put(`/employees/${formData.id}`, payload);
+        await apiClient.put(`/expenses/${formData.id}`, payload);
       } else {
-        await apiClient.post('/employees', payload);
+        await apiClient.post('/expenses', payload);
       }
 
-      await fetchEmployees();
+      await fetchExpenses();
       closeModal();
     } catch (e) {
-      setError('Failed to save employee');
+      setError('Failed to save expense');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm('Are you sure you want to delete this employee?');
+    const confirmed = window.confirm('Are you sure you want to delete this expense?');
     if (!confirmed) return;
 
     try {
-      await apiClient.delete(`/employees/${id}`);
-      setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+      await apiClient.delete(`/expenses/${id}`);
+      setExpenses((prev) => prev.filter((exp) => exp.id !== id));
     } catch (e) {
-      setError('Failed to delete employee');
+      setError('Failed to delete expense');
     }
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const d = typeof dateStr === 'string' ? dateStr : dateStr;
+    return d.slice(0, 10);
   };
 
   return (
     <div className="employees-page">
       <div className="page-header">
-        <h2>All Employees</h2>
+        <h2>All Expenses</h2>
         <button className="primary-button" onClick={openCreateModal}>
-          + Add Employee
+          + Add Expense
         </button>
       </div>
 
       {error && <div className="error-banner">{error}</div>}
 
       {loading ? (
-        <div>Loading employees...</div>
+        <div>Loading expenses...</div>
       ) : (
         <table className="employees-table">
           <thead>
             <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Department</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Expense Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {employees.length === 0 ? (
+            {expenses.length === 0 ? (
               <tr>
                 <td colSpan="5" style={{ textAlign: 'center' }}>
-                  No employees found.
+                  No expenses found.
                 </td>
               </tr>
             ) : (
-              employees.map((emp) => (
-                <tr key={emp.id}>
-                  <td>{emp.firstName}</td>
-                  <td>{emp.lastName}</td>
-                  <td>{emp.email}</td>
-                  <td>{emp.department}</td>
+              expenses.map((exp) => (
+                <tr key={exp.id}>
+                  <td>{exp.title}</td>
+                  <td>{exp.category}</td>
+                  <td>{exp.amount != null ? Number(exp.amount).toFixed(2) : ''}</td>
+                  <td>{formatDate(exp.expenseDate)}</td>
                   <td>
-                    <button className="secondary-button" onClick={() => openEditModal(emp)}>
+                    <button className="secondary-button" onClick={() => openEditModal(exp)}>
                       Edit
                     </button>
-                    <button className="danger-button" onClick={() => handleDelete(emp.id)}>
+                    <button className="danger-button" onClick={() => handleDelete(exp.id)}>
                       Delete
                     </button>
                   </td>
@@ -155,52 +161,56 @@ function EmployeesPage() {
         <div className="modal-backdrop">
           <div className="modal">
             <div className="modal-header">
-              <h3>{formData.id ? 'Edit Employee' : 'Add Employee'}</h3>
+              <h3>{formData.id ? 'Edit Expense' : 'Add Expense'}</h3>
               <button className="icon-button" onClick={closeModal}>
                 ✕
               </button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">
               <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
+                <label htmlFor="title">Title</label>
                 <input
-                  id="firstName"
-                  name="firstName"
+                  id="title"
+                  name="title"
                   type="text"
-                  value={formData.firstName}
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder="e.g. Swiggy Order, Uber Ride"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="amount">Amount</label>
+                <input
+                  id="amount"
+                  name="amount"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.amount}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="lastName">Last Name</label>
+                <label htmlFor="category">Category</label>
                 <input
-                  id="lastName"
-                  name="lastName"
+                  id="category"
+                  name="category"
                   type="text"
-                  value={formData.lastName}
+                  value={formData.category}
                   onChange={handleChange}
+                  placeholder="e.g. Food, Travel, Bills"
                   required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="expenseDate">Expense Date</label>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="department">Department</label>
-                <input
-                  id="department"
-                  name="department"
-                  type="text"
-                  value={formData.department}
+                  id="expenseDate"
+                  name="expenseDate"
+                  type="date"
+                  value={formData.expenseDate}
                   onChange={handleChange}
                   required
                 />
@@ -222,5 +232,4 @@ function EmployeesPage() {
   );
 }
 
-export default EmployeesPage;
-
+export default ExpensesPage;

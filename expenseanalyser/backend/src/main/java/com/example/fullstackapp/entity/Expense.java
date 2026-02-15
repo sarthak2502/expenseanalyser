@@ -6,31 +6,32 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "employees")
+@Table(name = "expenses")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Employee {
+public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(name = "title", nullable = false)
+    private String title;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "amount", nullable = false)
+    private Double amount;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Column(name = "category", nullable = false)
+    private String category;
 
-    @Column(name = "department", nullable = false)
-    private String department;
+    @Column(name = "expense_date", nullable = false)
+    private LocalDate expenseDate;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -42,4 +43,3 @@ public class Employee {
         }
     }
 }
-
