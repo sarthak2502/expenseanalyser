@@ -105,6 +105,7 @@ function UsersPage() {
       {loading ? (
         <div>Loading users...</div>
       ) : (
+        <div className="table-container">
         <table className="employees-table">
           <thead>
             <tr>
@@ -140,6 +141,7 @@ function UsersPage() {
             )}
           </tbody>
         </table>
+        </div>
       )}
 
       {isModalOpen && (

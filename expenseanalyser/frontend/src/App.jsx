@@ -5,11 +5,29 @@ import AddExpenseFilesPage from './AddExpenseFilesPage.jsx';
 
 function App() {
   const [activeMenu, setActiveMenu] = useState('expenses');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const closeSidebar = () => setSidebarOpen(false);
+  const chooseMenu = (key) => {
+    setActiveMenu(key);
+    closeSidebar();
+  };
 
   return (
     <div className="app-container">
       <header className="app-header">
-        <div className="logo">Expense Analyzer</div>
+        <button
+          type="button"
+          className="hamburger-button"
+          aria-label="Toggle menu"
+          onClick={() => setSidebarOpen((o) => !o)}
+        >
+          ☰
+        </button>
+        <div className="logo">
+          <span className="logo-title">Expense Analyzer</span>
+          <span className="logo-subtitle">Personal Financial Insights Platform</span>
+        </div>
         <div className="header-actions">
           <button className="icon-button" aria-label="Notifications">
             🔔
@@ -22,37 +40,48 @@ function App() {
         </div>
       </header>
 
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={closeSidebar}
+          onKeyDown={(e) => e.key === 'Escape' && closeSidebar()}
+          role="button"
+          tabIndex={0}
+          aria-label="Close menu"
+        />
+      )}
+
       <div className="app-body">
-        <aside className="sidebar">
+        <aside className={`sidebar ${sidebarOpen ? 'sidebar--open' : ''}`}>
           <nav>
             <ul>
               <li
                 className={activeMenu === 'expenses' ? 'active' : ''}
-                onClick={() => setActiveMenu('expenses')}
+                onClick={() => chooseMenu('expenses')}
               >
                 All Expenses
               </li>
               <li
                 className={activeMenu === 'users' ? 'active' : ''}
-                onClick={() => setActiveMenu('users')}
+                onClick={() => chooseMenu('users')}
               >
                 Users
               </li>
               <li
                 className={activeMenu === 'addExpenseFiles' ? 'active' : ''}
-                onClick={() => setActiveMenu('addExpenseFiles')}
+                onClick={() => chooseMenu('addExpenseFiles')}
               >
                 Add Expense Files
               </li>
               <li
                 className={activeMenu === 'reports' ? 'active' : ''}
-                onClick={() => setActiveMenu('reports')}
+                onClick={() => chooseMenu('reports')}
               >
                 Reports
               </li>
               <li
                 className={activeMenu === 'settings' ? 'active' : ''}
-                onClick={() => setActiveMenu('settings')}
+                onClick={() => chooseMenu('settings')}
               >
                 Settings
               </li>
@@ -78,6 +107,10 @@ function App() {
           )}
         </main>
       </div>
+
+      <footer className="app-footer">
+        Built by Sarthak Goel
+      </footer>
     </div>
   );
 }

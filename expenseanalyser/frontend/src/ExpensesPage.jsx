@@ -118,6 +118,7 @@ function ExpensesPage() {
       {loading ? (
         <div>Loading expenses...</div>
       ) : (
+        <div className="table-container">
         <table className="employees-table">
           <thead>
             <tr>
@@ -155,6 +156,7 @@ function ExpensesPage() {
             )}
           </tbody>
         </table>
+        </div>
       )}
 
       {isModalOpen && (

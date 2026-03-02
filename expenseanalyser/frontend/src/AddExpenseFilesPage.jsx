@@ -160,9 +160,9 @@ function AddExpenseFilesPage() {
       </div>
 
       {error && <div className="error-banner">{error}</div>}
-      {success && <div className="success-banner" style={{ background: '#d4edda', color: '#155724', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem' }}>{success}</div>}
+      {success && <div className="success-banner">{success}</div>}
 
-      <form onSubmit={handleUpload} className="modal-form" style={{ maxWidth: '480px', marginBottom: '2rem' }}>
+      <form onSubmit={handleUpload} className="modal-form page-form form-section">
         <div className="form-group">
           <label htmlFor="user">User</label>
           <select
@@ -179,13 +179,12 @@ function AddExpenseFilesPage() {
         </div>
         <div className="form-group">
           <label htmlFor="account">Account</label>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <div className="form-row">
             <select
               id="account"
               value={selectedAccountId}
               onChange={(e) => setSelectedAccountId(e.target.value)}
               required
-              style={{ flex: 1 }}
             >
               <option value="">Select account</option>
               {accounts.map((a) => (
@@ -213,10 +212,11 @@ function AddExpenseFilesPage() {
         </div>
       </form>
 
-      <h3 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>Uploaded Files</h3>
+      <h3 className="section-title">Uploaded Files</h3>
       {expenseFiles.length === 0 ? (
-        <p style={{ color: '#6b7280' }}>No files uploaded yet.</p>
+        <p className="empty-message">No files uploaded yet.</p>
       ) : (
+        <div className="table-container">
         <table className="employees-table">
           <thead>
             <tr>
@@ -249,6 +249,7 @@ function AddExpenseFilesPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {showAccountModal && (
